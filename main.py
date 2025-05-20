@@ -50,7 +50,8 @@ for block_i in range(settings.total_blocks):
         settings=settings,
         window=win,
         keyboard=kb
-    ).generate_conditions(func=generate_nback_conditions, n_back=n_back) \
+    ).generate_conditions(func=generate_nback_conditions,
+                          n_back=n_back) \
      .on_start(lambda b: trigger_sender.send(settings.triggers.get("block_onset", 100))) \
      .on_end(lambda b: trigger_sender.send(settings.triggers.get("block_end", 101))) \
      .run_trial(func=run_trial, stim_bank=stim_bank, n_back=n_back, trigger_sender=trigger_sender) \
