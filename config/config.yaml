@@ -1,0 +1,150 @@
+# === Subject Information ===
+subinfo_fields:
+  - name: subject_id
+    type: int
+    constraints:
+      min: 101
+      max: 999
+      digits: 3
+
+  - name: session_name
+    type: string
+
+  - name: experimenter
+    type: string
+
+  - name: gender
+    type: choice
+    choices: [Male, Female]
+
+subinfo_mapping:
+  subject_id: "被试号"
+  session_name: "Session名称(Practice/Experiment)"
+  experimenter: "主试姓名或缩写"
+  gender: "性别"
+  Male: "男"
+  Female: "女"
+  registration_failed: "注册失败。"
+  registration_successful: "注册成功！"
+  invalid_input: "字段 {field} 输入无效。"
+
+# === Window Settings ===
+window:
+  size: [1920, 1080]
+  monitor: testMonitor
+  units: deg
+  screen: 1
+  bg_color: black
+  fullscreen: True
+
+# === Task-Level Settings ===
+task:
+  total_blocks: 2
+  total_trials: 40
+  trial_per_block: 20
+  conditions: ['match', 'nomatch']  # Fill in specific condition labels as needed
+  key_list: [f, j]
+  match_key: f
+  nomatch_key: j
+  seed_mode: "same_across_sub"
+
+# === Stimuli Definitions ===
+stimuli:
+
+  stim_digit:
+    type: text
+    text: "*"
+    color: white
+  
+  stim_iti:
+    type: text
+    text: ""
+    color: black
+
+
+  # Instruction and break texts (use markdown-style multiline text)
+  instruction_1back:
+    type: textbox
+    text: |
+      【1-back任务说明】
+
+      您将看到屏幕上依次呈现一串数字（1~9）
+
+      任务要求是：判断当前数字是否与
+
+      【前1个数字相同】
+
+      - 如果相同，请按【F】键
+      - 如果不同，请按【J】键
+
+      请您尽量快速并准确地作答。
+      如果错过了某个数字，也请尽快调整注意力，继续完成任务。
+
+      准备好后请按【空格键】开始任务。
+    font: SimHei
+    alignment: center
+    letterHeight: 0.78
+    color: white
+
+
+    instruction_1back:
+      type: textbox
+      text: |
+        【2-back任务说明】
+
+        您将看到屏幕上依次呈现一串数字（1~9）
+
+        任务要求是：判断当前数字是否与
+
+        【前2个数字相同】
+
+        - 如果相同，请按【F】键
+        - 如果不同，请按【J】键
+
+        请您尽量快速并准确地作答。
+        如果错过了某个数字，也请尽快调整注意力，继续完成任务。
+
+        准备好后请按【空格键】开始任务。
+      font: SimHei
+      alignment: center
+      letterHeight: 0.78
+      color: white
+
+  block_break:
+    type: text
+    text: |
+      第 {block_num} / {total_blocks} 部分完成
+      正确率：{acc}
+
+      休息一下，按【空格键】继续
+    color: white
+    height: 0.78
+
+  good_bye:
+    type: textbox
+    text: |
+      【任务结束】
+
+      感谢您的参与！
+      请按【空格键】退出任务。
+    color: white
+    font: SimHei
+    alignment: center
+    letterHeight: 0.78
+
+# === Timing Settings ===
+timing:
+  cue_duration: 0.5                     # Optional: duration of cue/prime
+  iti_duration: [0.8, 1.2]              # Inter-trial interval
+
+# === Trigger Codes (can be expanded as needed) ===
+triggers:
+  exp_onset: 98
+  exp_end: 99
+  block_onset: 100
+  block_end: 101
+  match_onset: 2
+  nomatch_onset: 3
+  key_press: 4
+  no_response: 5
+
