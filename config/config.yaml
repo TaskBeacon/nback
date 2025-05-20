@@ -34,7 +34,7 @@ window:
   monitor: testMonitor
   units: deg
   screen: 1
-  bg_color: black
+  bg_color: grey
   fullscreen: True
 
 # === Task-Level Settings ===
@@ -43,9 +43,9 @@ task:
   total_trials: 40
   trial_per_block: 20
   conditions: ['match', 'nomatch']  # Fill in specific condition labels as needed
-  key_list: [f, j]
-  match_key: f
-  nomatch_key: j
+  key_list: [space]
+  match_key: space
+  nomatch_key: up
   seed_mode: "same_across_sub"
 
 # === Stimuli Definitions ===
@@ -68,14 +68,14 @@ stimuli:
     text: |
       【1-back任务说明】
 
-      您将看到屏幕上依次呈现一串数字（1~9）
+      您将看到屏幕上依次呈现一串数字（1-9）
 
       任务要求是：判断当前数字是否与
 
       【前1个数字相同】
 
-      - 如果相同，请按【F】键
-      - 如果不同，请按【J】键
+      - 如果相同，请按【空格键】
+
 
       请您尽量快速并准确地作答。
       如果错过了某个数字，也请尽快调整注意力，继续完成任务。
@@ -87,28 +87,28 @@ stimuli:
     color: white
 
 
-    instruction_1back:
-      type: textbox
-      text: |
-        【2-back任务说明】
+  instruction_2back:
+    type: textbox
+    text: |
+      【2-back任务说明】
 
-        您将看到屏幕上依次呈现一串数字（1~9）
+      您将看到屏幕上依次呈现一串数字（1-9）
 
-        任务要求是：判断当前数字是否与
+      任务要求是：判断当前数字是否与
 
-        【前2个数字相同】
+      【前2个数字相同】
 
-        - 如果相同，请按【F】键
-        - 如果不同，请按【J】键
+      - 如果相同，请按【空格键】
 
-        请您尽量快速并准确地作答。
-        如果错过了某个数字，也请尽快调整注意力，继续完成任务。
 
-        准备好后请按【空格键】开始任务。
-      font: SimHei
-      alignment: center
-      letterHeight: 0.78
-      color: white
+      请您尽量快速并准确地作答。
+      如果错过了某个数字，也请尽快调整注意力，继续完成任务。
+
+      准备好后请按【空格键】开始任务。
+    font: SimHei
+    alignment: center
+    letterHeight: 0.78
+    color: white
 
   block_break:
     type: text
@@ -134,8 +134,8 @@ stimuli:
 
 # === Timing Settings ===
 timing:
-  cue_duration: 0.5                     # Optional: duration of cue/prime
-  iti_duration: [0.8, 1.2]              # Inter-trial interval
+  cue_duration: 0.8                     # Optional: duration of cue/prime
+  iti_duration: [1.2]              # Inter-trial interval
 
 # === Trigger Codes (can be expanded as needed) ===
 triggers:

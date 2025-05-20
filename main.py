@@ -1,9 +1,7 @@
 from psyflow import BlockUnit,StimBank, StimUnit,SubInfo,TaskSettings,TriggerSender
-from psyflow import load_config,count_down, initialize_exp
-
+from psyflow import load_config, initialize_exp
 import pandas as pd
 from psychopy import core
-from functools import partial
 import serial
 
 from src import run_trial, generate_nback_conditions
@@ -38,20 +36,14 @@ stim_bank = StimBank(win, cfg['stim_config']).preload_all()
 # Save settings to file (for logging and reproducibility)
 settings.save_to_json()
 
-# Show instruction text and images if available
-StimUnit(win, 'instruction_text').add_stim(stim_bank.get('instruction_text')).wait_and_continue()
-
-
 # Run task blocks
 all_data = []
 for block_i in range(settings.total_blocks):
-    count_down(win, 3, color='white')
-    n_back = 1 if (block_i % 2 == 0) else 2 
-    if n_back == 1:
-        StimUnit(win, 'instruction_1back').add_stim(stim_bank.get('instruction_1back')).wait_and_continue()
-    else:
-        StimUnit(win, 'instruction_2back').add_stim(stim_bank.get('instruction_2back')).wait_and_continue()
-
+    half_point = settings.total_blocks // 2
+    n_back = 1 if block_i < half_point else 2
+    # Show corresponding instruction
+    instruction_label = f"instruction_{n_back}back"
+    StimUnit(win, instruction_label).add_stim(stim_bank.get(instruction_label)).wait_and_continue()
     block = BlockUnit(
         block_id=f"block_{block_i}",
         block_idx=block_i,
@@ -61,16 +53,17 @@ for block_i in range(settings.total_blocks):
     ).generate_conditions(func=generate_nback_conditions, n_back=n_back) \
      .on_start(lambda b: trigger_sender.send(settings.triggers.get("block_onset", 100))) \
      .on_end(lambda b: trigger_sender.send(settings.triggers.get("block_end", 101))) \
-     .run_trial(partial(run_trial,
-                        stim_bank=stim_bank,
-                        trigger_sender=trigger_sender)) \
+     .run_trial(func=run_trial, stim_bank=stim_bank, n_back=n_back, trigger_sender=trigger_sender) \
      .to_dict(all_data)
 
     # Customize block-level feedback (hit rate, scores, etc.)
-    block_trials = block.get_all_data()
-    acc = sum(t.get("cue_hit", False) for t in block_trials) / len(block_trials)
+    match_trials = block.get_trial_data(key='condition', pattern='match',match_type='startswith')
+    acc = sum(t.get("cue_hit", False) for t in match_trials) / len(match_trials)
 
-    StimUnit(win, 'block').add_stim(stim_bank.get_and_format('block_break', acc=acc)).wait_and_continue()
+    StimUnit(win, 'block').add_stim(stim_bank.get_and_format('block_break', 
+                                                             block_num=block_i+1,
+                                                             total_blocks=settings.total_blocks,
+                                                             acc=acc)).wait_and_continue()
 
 # Final screen (e.g., goodbye or total score)
 StimUnit(win, 'block').add_stim(stim_bank.get('good_bye')).wait_and_continue(terminate=True)

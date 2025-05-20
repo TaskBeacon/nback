@@ -1,8 +1,9 @@
 import random
+import numpy as np
 from typing import List, Optional, Dict
 
 def generate_nback_conditions(
-    n_trials: int,
+    n_trial_list: int,
     condition_labels: Optional[List[str]] = None,  # e.g., ['match', 'no_match']
     digits: List[str] = None,                             # e.g., ['1','2',...,'9'] or ['A', 'B', ...]
     n_back: int = 2,
@@ -10,9 +11,9 @@ def generate_nback_conditions(
     min_nonmatch_start: int = 3,
     max_match_run: int = 3,
     seed: Optional[int] = None
-) -> List[Dict[str, str]]:
+) -> np.ndarray:
     """
-    Generate an n-back sequence of trials with controlled match and non-match conditions.
+    Generate an n-back sequence of trial_list with controlled match and non-match conditions.
 
     Returns a list of dictionaries:
         {'condition': 'match_3'} or {'condition': 'no_match_7'}
@@ -26,13 +27,13 @@ def generate_nback_conditions(
     match_label, no_match_label = condition_labels
 
     rng = random.Random(seed)
-    trials = []
+    trial_list = []
     digit_buffer = []
     match_streak = 0
 
-    for i in range(n_trials):
+    for i in range(n_trial_list):
         if i < max(n_back, min_nonmatch_start):
-            # Force non-match in early trials
+            # Force non-match in early trial_list
             digit = rng.choice(digits)
             while len(digit_buffer) >= n_back and digit == digit_buffer[-n_back]:
                 digit = rng.choice(digits)
@@ -52,6 +53,6 @@ def generate_nback_conditions(
                 match_streak = 0
 
         digit_buffer.append(digit)
-        trials.append({'condition': label})
+        trial_list.append(label)
 
-    return trials
+    return np.array(trial_list, dtype=object)
