@@ -21,7 +21,7 @@ def run_trial(win,kb,settings,condition,stim_bank, n_back, trigger_sender=None,)
     trigger_pad = 10 if n_back == 1 else 20
 
     # === Helper for creating StimUnits ===
-    make_unit = partial(StimUnit, win=win, triggersender=trigger_sender)
+    make_unit = partial(StimUnit, win=win, kb=kb,  triggersender=trigger_sender)
 
     # 1. digit presentation  ===
     make_unit(unit_label="cue") \
